@@ -24,4 +24,4 @@ jobs:
 
     - name: Analyze Python functions
       run: |
-        python exception_check.py ./dag
+        python exception_check.py 
