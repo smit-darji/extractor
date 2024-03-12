@@ -1,4 +1,5 @@
 import os
+import sys
 import importlib.util
 import inspect
 from tabulate import tabulate
@@ -41,17 +42,22 @@ def check_exceptions(functions):
 
     return results
 
-# Added files obtained from the GitHub Actions workflow environment variable
-added_files_str = os.environ.get("ADDED_FILES", "")
-file_paths = added_files_str.split() if added_files_str else []
+def main():
+    added_files = sys.argv[1:]
+    if not added_files:
+        print("No added files provided.")
+        return
 
-# Extract functions from the added files
-functions_list = extract_functions(file_paths)
+    # Extract functions from the added files
+    functions_list = extract_functions(added_files)
 
-# Check for exception blocks in the extracted functions
-results = check_exceptions(functions_list)
+    # Check for exception blocks in the extracted functions
+    results = check_exceptions(functions_list)
 
-# Generate the result table
-table_headers = ["File Name", "Function Name", "File Path", "Exception Block"]
-table_data = [(result["file_name"], result["function_name"], result["file_path"], result["has_exception_block"]) for result in results]
-print(tabulate(table_data, headers=table_headers, tablefmt="grid"))
+    # Generate the result table
+    table_headers = ["File Name", "Function Name", "File Path", "Exception Block"]
+    table_data = [(result["file_name"], result["function_name"], result["file_path"], result["has_exception_block"]) for result in results]
+    print(tabulate(table_data, headers=table_headers, tablefmt="grid"))
+
+if __name__ == "__main__":
+    main()
