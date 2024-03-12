@@ -45,10 +45,9 @@ def check_exceptions(functions):
 added_files_str = os.environ.get("ADDED_FILES", "")
 file_paths = added_files_str.split() if added_files_str else []
 
-print("file_paths inside of python", file_paths)
 # Extract functions from the added files
 functions_list = extract_functions(file_paths)
-print("functions_list", functions_list)
+
 # Check for exception blocks in the extracted functions
 results = check_exceptions(functions_list)
 

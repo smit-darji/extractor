@@ -48,4 +48,4 @@ jobs:
         env:
           addedfiles: ${{ needs.addedFilesList.outputs.addedfiles }}
         run: |
-          python exception_check.py 
+          python a.py 
