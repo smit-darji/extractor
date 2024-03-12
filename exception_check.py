@@ -37,34 +37,7 @@ def check_exceptions(functions):
     # Initialize a list to store the results
     results = []
 
-    for func_info in functions:name: Python Function Analysis
-
-on:
-  push:
-    branches:
-      - main  # Adjust this to your main branch name
-
-jobs:
-  analyze_functions:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'  # Specify the Python version you need
-
-    - name: Install dependencies
-      run: |
-        pip install tabulate
-
-    - name: Analyze Python functions
-      run: |
-        python exception_check.py ./dag
-
+    for func_info in functions:
         file_name = func_info["file_name"]
         func_name = func_info["function_name"]
         file_path = func_info["file_path"]
