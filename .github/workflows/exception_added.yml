@@ -15,7 +15,9 @@ jobs:
 
       - name: Get list of Added files
         id: set-added-files
-        run: echo addedfiles=$(git diff --name-only --diff-filter=ACRT origin/${{ github.event.pull_request.base.ref }} HEAD | uniq | jq -R -s -c 'split("\n")[:-1]' | jq -r '.[] | ("./" + .)') >>$GITHUB_OUTPUT
+        run: |
+          addedfiles=$(git diff --name-only --diff-filter=ACRT origin/${{ github.event.pull_request.base.ref }} HEAD | uniq | jq -R -s -c 'split("\n")[:-1]' | jq -r '.[] | ("./" + .)')
+          echo "::set-output name=addedfiles::$addedfiles"
 
       - name: Print files to be validated
         run: |
@@ -44,10 +46,7 @@ jobs:
         run: |
           pip install tabulate
 
-      - name: Validate top level code
+      - name: Analyze DAG files for exceptions
         env:
-          addedfiles: ${{ needs.addedFilesList.outputs.addedfiles }}
-        run: |
-          echo "Added files are:" $addedfiles
-          ls
-          pwd
+          ADDED_FILES: ${{ needs.addedFilesList.outputs.addedfiles }}
+        run: python exception_check.py
