@@ -65,7 +65,7 @@ def main():
     # Create the result table
     table_headers = ["File Name", "Function Name", "File Path", "Exception Block"]
     table_data = [(result["file_name"], result["function_name"], result["file_path"], result["has_exception_block"]) for result in results]
-
+    print(" ")
     # Print the result table
     print(tabulate(table_data, headers=table_headers, tablefmt="grid"))
 
