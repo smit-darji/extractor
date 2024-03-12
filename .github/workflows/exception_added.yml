@@ -48,4 +48,4 @@ jobs:
         env:
           addedfiles: ${{ needs.addedFilesList.outputs.addedfiles }}
         run: |
-          python a.py 
+          python a.py "${{ env.addedfiles }}"
