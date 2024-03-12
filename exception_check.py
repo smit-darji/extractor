@@ -21,6 +21,7 @@ def extract_functions(file_paths):
     return functions
 
 def check_exceptions(functions):
+    print("check_exceptions called")
     results = []
 
     for func_info in functions:
