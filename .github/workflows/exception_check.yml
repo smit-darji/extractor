@@ -1,0 +1,28 @@
+name: Python Function Analysis
+
+on:
+  push:
+    branches:
+      - Master  # Adjust this to your main branch name
+
+jobs:
+  analyze_functions:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x' 
+
+    - name: Install dependencies
+      run: |
+        pip install tabulate
+
+    - name: Analyze Python functions
+      run: |
+        python exception_check.py ./dag
+
