@@ -1,7 +1,7 @@
 import os
-import sys
 import importlib.util
 import inspect
+import sys
 from tabulate import tabulate
 
 def extract_functions(file_paths):
@@ -43,22 +43,38 @@ def check_exceptions(functions):
     return results
 
 def main():
-    added_files = sys.argv[1:]
-    if not added_files:
-        print("No added files provided.")
-        return
+    file_list = []
+    added_files = sys.argv[1:]  # Get command line arguments except the script name
+    print("List of added files:")
+    for file in added_files:
+      file_list.append(file)
+    print("Added File List: ", file_list)
+      
+    # # List of file paths
+    # file_list = [
+    #     "./a.py",
+    #     "./dag/dag_file_1.py",
+    #     "./dag/dag_file_2.py",
+    #     "./dag/dag_file_3.py",
+    #     "./dag/test/demo/demo_dag_1.py",
+    #     "./dag/test/demo/demo_dag_file_2.py",
+    #     "./dag/test/test_dag_1.py",
+    #     "./dag/test/test_dag_file_2.py"
+    # ]
 
-    print(added_files)
-    # Extract functions from the added files
-    functions_list = extract_functions(added_files)
+    # Extract functions from the provided file paths
+    functions_list = extract_functions(file_list)
 
     # Check for exception blocks in the extracted functions
     results = check_exceptions(functions_list)
 
-    # Generate the result table
+       # Create the result table
     table_headers = ["File Name", "Function Name", "File Path", "Exception Block"]
     table_data = [(result["file_name"], result["function_name"], result["file_path"], result["has_exception_block"]) for result in results]
+
+    # Print the result table
     print(tabulate(table_data, headers=table_headers, tablefmt="grid"))
+
 
 if __name__ == "__main__":
     main()
