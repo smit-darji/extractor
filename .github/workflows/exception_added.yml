@@ -44,13 +44,8 @@ jobs:
         run: |
           pip install tabulate
 
-      - name: Validate top level code
+      - name: Analyze Python functions
         env:
           addedfiles: ${{ needs.addedFilesList.outputs.addedfiles }}
         run: |
-          echo "Added files are:" $addedfiles
-          ls
-          pwd
-      - name: Analyze Python functions
-        run: |
-          python exception_check.py $addedfiles
+          python exception_check.py 
