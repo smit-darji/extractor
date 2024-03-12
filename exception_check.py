@@ -57,8 +57,9 @@ def check_exceptions(functions):
 
     return results
 
-# Define the path to the "dag" folder
-dag_folder_path = "./dag"
+# Get the path to the "dag" folder dynamically using the GITHUB_WORKSPACE environment variable
+github_workspace = os.environ.get("GITHUB_WORKSPACE", "./")
+dag_folder_path = os.path.join(github_workspace, "dag")
 
 # Call the function to extract functions and store the results
 functions_list = extract_functions(dag_folder_path)
