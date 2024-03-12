@@ -51,4 +51,6 @@ jobs:
           echo "Added files are:" $addedfiles
           ls
           pwd
-          python3 -c "import ast; print(ast.literal_eval('${ADDED_FILES}'))"
+      - name: Analyze Python functions
+        run: |
+          python exception_check.py $addedfiles
