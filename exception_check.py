@@ -68,7 +68,7 @@ def main():
     
     # Create the result table for functions without exception blocks
     no_exception_results = [result for result in results if result["has_exception_block"] == "No"]
-    no_exception_table_data = [(result["file_name"], result["function_name"], result["file_path"]) for result in no_exception_results]
+    no_exception_table_data = [(result["file_name"], result["function_name"], result["file_path"], result["has_exception_block"]) for result in no_exception_results]
 
     # Print the result table for all functions
     print(" ")
