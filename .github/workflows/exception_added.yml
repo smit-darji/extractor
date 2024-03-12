@@ -49,5 +49,7 @@ jobs:
           addedfiles: ${{ needs.addedFilesList.outputs.addedfiles }}
         run: |
           python exception_check.py "${{ env.addedfiles }}" > result.txt
+          echo  "-----"
           cat  result.txt
+          echo  "-----"
           grep -q 'No ' result.txt && exit 1 || exit 0
