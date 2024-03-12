@@ -1,49 +1,36 @@
 import os
 import importlib.util
 import inspect
+import sys
 from tabulate import tabulate
 
-def extract_functions(folder_path):
-    # Initialize a list to store the function names along with their file names
+def extract_functions(file_paths):
     functions = []
-
-    # Get all files and directories in the folder
-    items = os.listdir(folder_path)
-
-    for item in items:
-        item_path = os.path.join(folder_path, item)
-        
-        if item == "__pycache__":
+    for file_path in file_paths:
+        if file_path.endswith('.pyc'):
             continue
+        try:
+            spec = importlib.util.spec_from_file_location("module_name", file_path)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
 
-        if os.path.isdir(item_path):  # If item is a directory, recursively call extract_functions
-            functions.extend(extract_functions(item_path))
-        elif os.path.isfile(item_path):  # If item is a file, extract functions from it
-            module_name = item.split('.')[0]  # Extract module name from file name
-            try:
-                spec = importlib.util.spec_from_file_location(module_name, item_path)
-                module = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(module)
-
-                for func_name in dir(module):
-                    if callable(getattr(module, func_name)):
-                        functions.append({"file_name": item, "function_name": func_name, "file_path": item_path})
-            except FileNotFoundError:
-                pass
+            for func_name in dir(module):
+                if callable(getattr(module, func_name)):
+                    functions.append({"file_name": os.path.basename(file_path), "function_name": func_name, "file_path": file_path})
+        except FileNotFoundError:
+            pass
 
     return functions
 
 def check_exceptions(functions):
-    # Initialize a list to store the results
     results = []
-
     for func_info in functions:
         file_name = func_info["file_name"]
         func_name = func_info["function_name"]
         file_path = func_info["file_path"]
         
         try:
-            module_name = file_name.split('.')[0]  # Extract module name from file name
+            module_name = file_name.split('.')[0]
             spec = importlib.util.spec_from_file_location(module_name, file_path)
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
@@ -57,17 +44,44 @@ def check_exceptions(functions):
 
     return results
 
-# Get the path to the "dag" folder dynamically using the GITHUB_WORKSPACE environment variable
-github_workspace = os.environ.get("GITHUB_WORKSPACE", "./")
-dag_folder_path = os.path.join(github_workspace, "dag")
+def main():
+    file_list = []
+    added_files = " ".join(sys.argv[1:]) 
+    files_split = added_files.split()
+    for file in files_split:
+        file_list.append(file)
 
-# Call the function to extract functions and store the results
-functions_list = extract_functions(dag_folder_path)
+    # Filter out file paths starting with '__pycache__'
+    file_list = [file_path for file_path in file_list if not file_path.startswith('./__pycache__')]
 
-# Call the function to check for exception blocks and store the results
-results = check_exceptions(functions_list)
+    print("List print from Python:", file_list)
 
-# Convert results to a tabular format and print the table
-table_headers = ["File Name", "Function Name", "File Path", "Exception Block"]
-table_data = [(result["file_name"], result["function_name"], result["file_path"], result["has_exception_block"]) for result in results]
-print(tabulate(table_data, headers=table_headers, tablefmt="grid"))
+    # Extract functions from the provided file paths
+    functions_list = extract_functions(file_list)
+
+    # Check for exception blocks in the extracted functions
+    results = check_exceptions(functions_list)
+
+    # Create the result table for all functions
+    all_table_headers = ["File Name", "Function Name", "File Path", "Exception Block"]
+    all_table_data = [(result["file_name"], result["function_name"], result["file_path"], result["has_exception_block"]) for result in results]
+    
+    # Create the result table for functions without exception blocks
+    all_table_headers = ["File Name", "Function Name", "File Path", "Exception Block"]
+    no_exception_results = [result for result in results if result["has_exception_block"] == "No"]
+    no_exception_table_data = [(result["file_name"], result["function_name"], result["file_path"], result["has_exception_block"]) for result in no_exception_results]
+
+    # Print the result table for all functions
+    print(" ")
+    print("All Functions:")
+    print(tabulate(all_table_data, headers=all_table_headers, tablefmt="grid"))
+
+    if [result for result in results if result["has_exception_block"] == "No"]:
+        # Print the result table for functions without exception blocks
+        print(" ")
+        print("Functions without Exception Blocks:")
+        print(tabulate(no_exception_table_data, headers=all_table_headers, tablefmt="grid"))
+
+
+if __name__ == "__main__":
+    main()
