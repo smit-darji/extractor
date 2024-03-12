@@ -1,4 +1,4 @@
-def example_function_2():
+def example_function_21():
     try:
         result = int("hello")
         print("Result:", result)
