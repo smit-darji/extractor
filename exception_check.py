@@ -45,9 +45,8 @@ def check_exceptions(functions):
 
     return results
 
-# Get the list of file paths dynamically from the GitHub Actions workflow
-file_paths_str = os.environ.get("ADDED_FILES", "")
-file_paths = file_paths_str.split(',') if file_paths_str else []
+# Directly use the list of file paths obtained from GitHub Actions workflow
+file_paths = os.environ.get("ADDED_FILES", "").split(',') if os.environ.get("ADDED_FILES", "") else []
 
 functions_list = extract_functions(file_paths)
 results = check_exceptions(functions_list)
