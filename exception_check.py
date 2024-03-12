@@ -43,24 +43,20 @@ def check_exceptions(functions):
     return results
 
 def main():
+  
+  
     file_list = []
     added_files = " ".join(sys.argv[1:]) 
     files_split = added_files.split()
     for file in files_split:
         file_list.append(file)
     print("List print from Python:", file_list)
-      
-    # # List of file paths
-    # file_list = [
-    #     "./a.py",
-    #     "./dag/dag_file_1.py",
-    #     "./dag/dag_file_2.py",
-    #     "./dag/dag_file_3.py",
-    #     "./dag/test/demo/demo_dag_1.py",
-    #     "./dag/test/demo/demo_dag_file_2.py",
-    #     "./dag/test/test_dag_1.py",
-    #     "./dag/test/test_dag_file_2.py"
-    # ]
+    
+    # List of file paths
+    # file_list = ['./__pycache__/a.cpython-310.pyc', './a.py', './dag/dag_file_1.py', './dag/dag_file_2.py', './dag/dag_file_3.py', './dag/test/demo/demo_dag_1.py', './dag/test/demo/demo_dag_file_2.py', './dag/test/test_dag_1.py', './dag/test/test_dag_file_2.py']
+    
+    # Filter out file paths starting with '__pycache__'
+    file_list = [file_path for file_path in file_list if not file_path.startswith('./__pycache__')]
 
     # Extract functions from the provided file paths
     functions_list = extract_functions(file_list)
@@ -68,13 +64,12 @@ def main():
     # Check for exception blocks in the extracted functions
     results = check_exceptions(functions_list)
 
-       # Create the result table
+    # Create the result table
     table_headers = ["File Name", "Function Name", "File Path", "Exception Block"]
     table_data = [(result["file_name"], result["function_name"], result["file_path"], result["has_exception_block"]) for result in results]
 
     # Print the result table
     print(tabulate(table_data, headers=table_headers, tablefmt="grid"))
-
 
 if __name__ == "__main__":
     main()
