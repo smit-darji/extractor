@@ -4,9 +4,7 @@ import inspect
 from tabulate import tabulate
 
 def extract_functions(file_paths):
-    print("extract_functions", file_paths)
     functions = []
-    
     for file_path in file_paths:
         try:
             spec = importlib.util.spec_from_file_location("module_name", file_path)
@@ -22,9 +20,7 @@ def extract_functions(file_paths):
     return functions
 
 def check_exceptions(functions):
-    print("check_exceptions called", extract_functions)
     results = []
-
     for func_info in functions:
         file_name = func_info["file_name"]
         func_name = func_info["function_name"]
@@ -45,12 +41,18 @@ def check_exceptions(functions):
 
     return results
 
-# Directly use the list of file paths obtained from GitHub Actions workflow
-file_paths = os.environ.get("ADDED_FILES", "").split(',') if os.environ.get("ADDED_FILES", "") else []
+# Added files obtained from the GitHub Actions workflow environment variable
+added_files_str = os.environ.get("ADDED_FILES", "")
+file_paths = added_files_str.split() if added_files_str else []
 
+print("file_paths inside of python", file_paths)
+# Extract functions from the added files
 functions_list = extract_functions(file_paths)
+print("functions_list", functions_list)
+# Check for exception blocks in the extracted functions
 results = check_exceptions(functions_list)
 
+# Generate the result table
 table_headers = ["File Name", "Function Name", "File Path", "Exception Block"]
 table_data = [(result["file_name"], result["function_name"], result["file_path"], result["has_exception_block"]) for result in results]
 print(tabulate(table_data, headers=table_headers, tablefmt="grid"))
