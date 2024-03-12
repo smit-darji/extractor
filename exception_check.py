@@ -76,10 +76,12 @@ def main():
     print("All Functions:")
     print(tabulate(all_table_data, headers=all_table_headers, tablefmt="grid"))
 
-    # Print the result table for functions without exception blocks
-    print(" ")
-    print("Functions without Exception Blocks:")
-    print(tabulate(no_exception_table_data, headers=all_table_headers, tablefmt="grid"))
+    if [result for result in results if result["has_exception_block"] == "No"]:
+        # Print the result table for functions without exception blocks
+        print(" ")
+        print("Functions without Exception Blocks:")
+        print(tabulate(no_exception_table_data, headers=all_table_headers, tablefmt="grid"))
+
 
 if __name__ == "__main__":
     main()
