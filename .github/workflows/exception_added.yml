@@ -1,0 +1,24 @@
+name: Top-Level Code Check
+
+on:
+  pull_request:
+    branches:
+      - Master
+
+jobs:
+  changedFilesList:
+    runs-on: ubuntu-latest
+    outputs:
+      changedfiles: ${{ steps.set-changed-files.outputs.changedfiles }}
+    steps:
+      - name: Clone Repository
+        uses: actions/checkout@v2
+
+      - name: Get main branch
+        run: git fetch --no-tags --prune --depth=1 origin +refs/heads/${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }}
+
+      - name: Get list of newly added files
+        id: set-changed-files
+        run: |
+          added_files=$(git diff --name-only --diff-filter=A origin/${{ github.event.pull_request.base.ref }} HEAD | uniq | jq -R -s -c 'split("\n")[:-1]' | jq -r '.[] | ("./" + .)')
+          echo "::set-output name=changedfiles::${added_files}"
