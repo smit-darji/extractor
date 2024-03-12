@@ -67,6 +67,7 @@ def main():
     all_table_data = [(result["file_name"], result["function_name"], result["file_path"], result["has_exception_block"]) for result in results]
     
     # Create the result table for functions without exception blocks
+    all_table_headers = ["File Name", "Function Name", "File Path", "Exception Block"]
     no_exception_results = [result for result in results if result["has_exception_block"] == "No"]
     no_exception_table_data = [(result["file_name"], result["function_name"], result["file_path"], result["has_exception_block"]) for result in no_exception_results]
 
@@ -78,7 +79,7 @@ def main():
     # Print the result table for functions without exception blocks
     print(" ")
     print("Functions without Exception Blocks:")
-    print(tabulate(no_exception_table_data, headers=["File Name", "Function Name", "File Path"], tablefmt="grid"))
+    print(tabulate(no_exception_table_data, headers=all_table_headers, tablefmt="grid"))
 
 if __name__ == "__main__":
     main()
