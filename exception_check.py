@@ -44,11 +44,11 @@ def check_exceptions(functions):
 
 def main():
     file_list = []
-    added_files = sys.argv[1:]  # Get command line arguments except the script name
-    print("List of added files:")
-    for file in added_files:
-      file_list.append(file)
-    print("Added File List: ", file_list)
+    added_files = " ".join(sys.argv[1:]) 
+    files_split = added_files.split()
+    for file in files_split:
+        file_list.append(file)
+    print("List print from Python:", file_list)
       
     # # List of file paths
     # file_list = [
