@@ -57,11 +57,12 @@ def check_exceptions(functions):
 
     return results
 
-# Get the path to the workspace directory dynamically using the GITHUB_WORKSPACE environment variable
+# Get the path to the "dag" folder dynamically using the GITHUB_WORKSPACE environment variable
 github_workspace = os.environ.get("GITHUB_WORKSPACE", "./")
+dag_folder_path = os.path.join(github_workspace, "./")
 
 # Call the function to extract functions and store the results
-functions_list = extract_functions(github_workspace)
+functions_list = extract_functions(dag_folder_path)
 
 # Call the function to check for exception blocks and store the results
 results = check_exceptions(functions_list)
