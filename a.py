@@ -1,9 +1,10 @@
-import os
+import sys
 
+def main():
+    added_files = sys.argv[1:]  # Get command line arguments except the script name
+    print("List of added files:")
+    for file in added_files:
+        print(file)
 
-# Added files obtained from the GitHub Actions workflow environment variable
-added_files_str = os.environ.get("ADDED_FILES", "")
-file_paths = added_files_str.split() if added_files_str else []
-
-# Print the value of the ADDED_FILES environment variable
-print("ADDED_FILES:", added_files_str)
+if __name__ == "__main__":
+    main()
