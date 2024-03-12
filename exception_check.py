@@ -48,6 +48,7 @@ def main():
         print("No added files provided.")
         return
 
+    print(added_files)
     # Extract functions from the added files
     functions_list = extract_functions(added_files)
 
