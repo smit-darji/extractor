@@ -4,8 +4,9 @@ import inspect
 from tabulate import tabulate
 
 def extract_functions(file_paths):
+    print("extract_functions", file_paths)
     functions = []
-
+    
     for file_path in file_paths:
         try:
             spec = importlib.util.spec_from_file_location("module_name", file_path)
@@ -21,7 +22,7 @@ def extract_functions(file_paths):
     return functions
 
 def check_exceptions(functions):
-    print("check_exceptions called")
+    print("check_exceptions called", extract_functions)
     results = []
 
     for func_info in functions:
